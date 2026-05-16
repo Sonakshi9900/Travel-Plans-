@@ -148,25 +148,29 @@ exports.forgotPassword = async (req, res, next) => {
     // Create reset url
     // Assumes frontend is running on localhost:3000 during dev or the deployed URL
     const resetUrl = `http://localhost:3000/reset-password/${resetToken}`;
+    
+    // FOR LOCAL TESTING: Print the URL directly so the user can click it instantly!
+    console.log("\n=======================================================");
+    console.log("🚀 PASSWORD RESET LINK GENERATED:");
+    console.log(resetUrl);
+    console.log("=======================================================\n");
 
     const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
 
     try {
+      // We still try to send the email, but if it takes too long, they already have the link above!
       await sendEmail({
         email: user.email,
         subject: "Password reset token",
         message,
       });
 
-      res.status(200).json({ success: true, data: "Email sent" });
+      res.status(200).json({ success: true, data: "Email sent (check backend terminal for link!)" });
     } catch (err) {
-      console.error(err);
-      user.resetPasswordToken = undefined;
-      user.resetPasswordExpire = undefined;
-
-      await user.save({ validateBeforeSave: false });
-
-      return res.status(500).json({ msg: "Email could not be sent" });
+      console.error("Email sending failed, but link is printed above!");
+      // We don't want to throw a 500 error here for local testing since we printed the link.
+      // In production, you might want to return a 500 error.
+      res.status(200).json({ success: true, data: "Check your backend terminal for the reset link!" });
     }
   } catch (err) {
     next(err);
