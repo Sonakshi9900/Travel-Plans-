@@ -1,14 +1,18 @@
 const nodemailer = require("nodemailer");
 
 const sendEmail = async (options) => {
-  // Using Ethereal Email for testing purposes (it intercepts emails so we don't spam real inboxes)
-  // In production, you would use SendGrid, Mailgun, or standard SMTP credentials
+  // Generate test SMTP service account from ethereal.email
+  // Only needed if you don't have a real mail account for testing
+  let testAccount = await nodemailer.createTestAccount();
+
+  // create reusable transporter object using the default SMTP transport
   const transporter = nodemailer.createTransport({
     host: "smtp.ethereal.email",
     port: 587,
+    secure: false, // true for 465, false for other ports
     auth: {
-      user: "reggie.kautzer60@ethereal.email", // Example ethereal account
-      pass: "8eA5xZbV4R2xYb3XkM",
+      user: testAccount.user, // generated ethereal user
+      pass: testAccount.pass, // generated ethereal password
     },
   });
 
