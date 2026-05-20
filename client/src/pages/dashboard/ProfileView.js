@@ -611,7 +611,6 @@ const ProfileView = () => {
                     onChange={(e) =>
                       setProfileForm({ ...profileForm, email: e.target.value })
                     }
-                    
                   />
                 </Grid>
                 <Grid item xs={12}>
