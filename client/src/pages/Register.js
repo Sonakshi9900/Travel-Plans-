@@ -68,7 +68,9 @@ const Register = () => {
     const initializeGoogleSignIn = () => {
       if (window.google) {
         window.google.accounts.id.initialize({
-          client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID || "643113382684-q82ot662op6kq7fnc1brg3ivclq3pmvk.apps.googleusercontent.com",
+          client_id:
+            process.env.REACT_APP_GOOGLE_CLIENT_ID ||
+            "643113382684-q82ot662op6kq7fnc1brg3ivclq3pmvk.apps.googleusercontent.com",
           callback: handleGoogleCallback,
         });
 
@@ -86,7 +88,9 @@ const Register = () => {
 
     initializeGoogleSignIn();
 
-    const script = document.querySelector('script[src="https://accounts.google.com/gsi/client"]');
+    const script = document.querySelector(
+      'script[src="https://accounts.google.com/gsi/client"]',
+    );
     if (script) {
       script.addEventListener("load", initializeGoogleSignIn);
     }
