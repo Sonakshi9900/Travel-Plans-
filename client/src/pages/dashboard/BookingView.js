@@ -16,12 +16,7 @@ import {
   Divider,
   Rating,
   CircularProgress,
-  Slider,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
   Collapse,
-  IconButton,
   Badge,
 } from "@mui/material";
 import FlightIcon from "@mui/icons-material/Flight";
