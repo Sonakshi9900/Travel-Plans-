@@ -317,17 +317,24 @@ const Register = () => {
               sx={{ mb: 2 }}
             />
             <FormControlLabel
+              sx={{
+                alignItems: "flex-start", // Shifts the alignment anchor to the top line
+                mt: 1.5,
+              }}
               control={
                 <Checkbox
                   checked={formData.agreeTerms}
                   onChange={handleChange}
                   name="agreeTerms"
-                  color="primary"
-                  required
+                  color="primary" 
+                  sx={{
+                    paddingTop: 0,
+                    marginTop: "-2px",
+                  }}
                 />
               }
               label={
-                <Typography variant="body2">
+                <Typography variant="body2" sx={{ lineHeight: 1.5 }}>
                   I agree to the{" "}
                   <Link
                     component={RouterLink}
@@ -345,7 +352,7 @@ const Register = () => {
                     sx={{ fontWeight: 600 }}
                   >
                     Privacy Policy
-                  </Link>
+                  </Link>{" "}*
                 </Typography>
               }
             />
