@@ -53,8 +53,8 @@
   },
   {
     "name": "Pink City",
-    "city": "",
-    "state": "",
+    "city": "Jaipur",
+    "state": "Rajasthan",
     "zone": "",
     "coordinates": {
       "lat": 26.9232015,
@@ -79,8 +79,8 @@
   },
   {
     "name": "Albert Hall",
-    "city": "",
-    "state": "",
+    "city": "Jaipur",
+    "state": "Rajasthan",
     "zone": "",
     "coordinates": {
       "lat": 26.9117053,
