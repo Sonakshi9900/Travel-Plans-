@@ -256,7 +256,7 @@ Make sure you have the following installed:
 
 ```bash
 git clone https://github.com/hitesh-kumar123/Travel-Plans-.git
-cd travel-planner
+cd Travel-Plans-
 ```
 
 ### 2. Install Dependencies
@@ -275,6 +275,41 @@ cd travel-planner
 > Please install dependencies and run scripts separately inside the `client` and `server` directories.
 
 ```bash
+
+### Important
+
+Run commands from the appropriate project directory.
+
+Backend:
+
+```bash
+cd server
+npm install
+npm run dev
+```
+
+Frontend:
+
+```bash
+cd client
+npm install
+npm start
+```
+
+Running commands from the wrong directory may result in missing files or package.json errors.
+
+
+### ⚠️ Important
+
+Do not run installation or start commands from the repository root directory.
+
+Install dependencies separately inside:
+
+- `server/`
+- `client/`
+
+Running commands from the root directory may result in missing script errors.
+
 # Install backend dependencies
 cd server
 npm install
@@ -290,6 +325,7 @@ Copy the example file and fill in your values:
 
 ```bash
 cp .env.example server/.env
+Copy-Item .env.example server\.env
 ```
 
 Open `server/.env` and update:
@@ -350,6 +386,29 @@ Then open your browser at **[http://localhost:3000](http://localhost:3000)** �
 | `FROM_NAME`       |    ❌    | Custom sender display name (default: `PackGo`)                     |
 
 ---
+
+## Troubleshooting
+
+### MongoDB Connection Error
+
+If you see:
+
+```text
+The uri parameter to openUri() must be a string, got undefined
+```
+
+Make sure your `.env` file exists and contains a valid MongoDB connection string.
+
+### package.json Not Found
+
+If npm reports:
+
+```text
+Could not read package.json
+```
+
+Verify that you are running commands from the correct project directory (`server/` or `client/`).
+
 
 ## 📡 API Endpoints
 
@@ -547,8 +606,12 @@ Please read our:
 # 2. Clone your fork
 git clone https://github.com/<your-username>/Travel-Plans-.git
 
-# 3. Create a feature branch
+git fetch upstream
+git pull upstream main
+
+# 3. Create a feature branchP
 git checkout -b feature/your-amazing-feature
+
 
 # 4. Make your changes and commit
 git add .
