@@ -27,6 +27,7 @@ import WalletIcon from "@mui/icons-material/Wallet";
 import PrimaryButton from "../../components/PrimaryButton";
 import { getTrips, addTrip } from "../../redux/actions/tripActions";
 import api from "../../services/api";
+import ShowMoreList from "../../components/ShowMoreList";
 
 const STATUS_COLORS = {
   planned: "primary",
@@ -290,22 +291,27 @@ const TripsView = () => {
             </Grid>
           ))
         ) : filteredTrips.length > 0 ? (
-          filteredTrips.map((trip) => {
-            const days =
-              trip.startDate && trip.endDate
-                ? Math.ceil(
-                    (new Date(trip.endDate) - new Date(trip.startDate)) /
-                      (1000 * 60 * 60 * 24),
-                  )
-                : 0;
-            return (
-              <Grid
-                xs={12}
-                md={6}
-                lg={4}
-                key={trip._id}
-                sx={{ display: "flex", justifyContent: "center" }}
-              >
+            <ShowMoreList
+              items={filteredTrips}
+              initialCount={6}
+              itemLabel="Trips"
+              renderItem={(trip) => {
+                const days =
+                  trip.startDate && trip.endDate
+                    ? Math.ceil(
+                        (new Date(trip.endDate) - new Date(trip.startDate)) /
+                        (1000 * 60 * 60 * 24),
+                      )
+                    : 0;
+
+                return (
+                  <Grid
+                    xs={12}
+                    md={6}
+                    lg={4}
+                    key={trip._id}
+                    sx={{ display: "flex", justifyContent: "center" }}
+                  >
                 <Card
                   elevation={0}
                   sx={{
@@ -439,8 +445,9 @@ const TripsView = () => {
                 </Card>
               </Grid>
             );
-          })
-        ) : (
+          }}
+        />
+      ) : (
           <Grid xs={12}>
             <Paper
               sx={{
