@@ -126,7 +126,7 @@ const FAQSection = () => {
                     color: "#475569",
                     lineHeight: "1.7",
                     fontSize: "0.95rem",
-                    }}
+                  }}
                 >
                   {faq.answer}
                 </Typography>

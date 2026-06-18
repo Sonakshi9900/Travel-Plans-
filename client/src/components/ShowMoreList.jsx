@@ -9,9 +9,7 @@ const ShowMoreList = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
 
-  const visibleItems = expanded
-    ? items
-    : items.slice(0, initialCount);
+  const visibleItems = expanded ? items : items.slice(0, initialCount);
 
   const remainingItems = items.length - initialCount;
 
@@ -28,18 +26,18 @@ const ShowMoreList = ({
             mt: 3,
           }}
         >
-            <Button
-                variant="outlined"
-                onClick={() => setExpanded(!expanded)}
-                sx={{
-                    borderRadius: "999px",
-                    px: 3,
-                    py: 1,
-                    textTransform: "none",
-                    fontWeight: 600,
-                    minWidth: 180,
-                }}
-            >
+          <Button
+            variant="outlined"
+            onClick={() => setExpanded(!expanded)}
+            sx={{
+              borderRadius: "999px",
+              px: 3,
+              py: 1,
+              textTransform: "none",
+              fontWeight: 600,
+              minWidth: 180,
+            }}
+          >
             {expanded
               ? "Show Less"
               : `Show ${remainingItems} More ${itemLabel}`}
