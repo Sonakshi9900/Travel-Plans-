@@ -3,6 +3,8 @@ const axios = require("axios");
 // Get current weather for a location
 exports.getCurrentWeather = async (req, res) => {
   try {
+    console.log("Weather key:", process.env.WEATHER_API_KEY);
+    console.log("Location:", req.params.location);
     const { location } = req.params;
 
     const response = await axios.get(
@@ -18,6 +20,9 @@ exports.getCurrentWeather = async (req, res) => {
       humidity: response.data.main.humidity,
       windSpeed: response.data.wind.speed,
       timestamp: response.data.dt,
+
+      // Weather provider information
+      provider: "OpenWeather",
     };
 
     res.json(weatherData);

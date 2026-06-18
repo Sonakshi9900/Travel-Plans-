@@ -28,6 +28,9 @@ import RestaurantIcon from "@mui/icons-material/Restaurant";
 import LocalParkingIcon from "@mui/icons-material/LocalParking";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import CloseIcon from "@mui/icons-material/Close";
+import { useTheme } from "@mui/material/styles";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import ShowMoreList from "../../components/ShowMoreList";
 import {
   searchFlights,
   searchHotels,
@@ -73,7 +76,12 @@ const BookingView = () => {
     guests: 2,
     rooms: 1,
   });
+  const theme = useTheme();
 
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const isTablet = useMediaQuery(theme.breakpoints.between("sm", "md"));
+
+  const hotelsInitialCount = isMobile ? 2 : isTablet ? 4 : 6;
   // Flight filters
   const [flightFilters, setFlightFilters] = useState({
     minBudget: "",
@@ -181,6 +189,8 @@ const BookingView = () => {
               <Grid container spacing={2} sx={{ alignItems: "flex-end" }}>
                 <Grid xs={12} sm={6} md={2.4}>
                   <TextField
+                    id="flight-origin"
+                    name="origin"
                     fullWidth
                     label="From (City/Airport)"
                     placeholder="e.g. Delhi"
@@ -194,6 +204,8 @@ const BookingView = () => {
                 <Grid xs={12} sm={6} md={2.4}>
                   <TextField
                     fullWidth
+                    id="flight-destination"
+                    name="destination"
                     label="To (City/Airport)"
                     placeholder="e.g. Mumbai"
                     value={flightForm.destination}
@@ -208,6 +220,8 @@ const BookingView = () => {
                 </Grid>
                 <Grid xs={6} md={2.4}>
                   <TextField
+                    id="departure-date"
+                    name="departureDate"
                     fullWidth
                     type="date"
                     label="Departure"
@@ -233,6 +247,8 @@ const BookingView = () => {
                 </Grid>
                 <Grid xs={6} md={2.4}>
                   <TextField
+                    id="return-date"
+                    name="returnDate"
                     fullWidth
                     type="date"
                     label="Return (optional)"
@@ -324,6 +340,8 @@ const BookingView = () => {
                       </Typography>
                       <Box sx={{ display: "flex", gap: 1 }}>
                         <TextField
+                          id="flight-min-budget"
+                          name="minBudget"
                           fullWidth
                           size="small"
                           label="Min ($)"
@@ -338,6 +356,8 @@ const BookingView = () => {
                           }
                         />
                         <TextField
+                          id="flight-max-budget"
+                          name="maxBudget"
                           fullWidth
                           size="small"
                           label="Max ($)"
@@ -365,6 +385,8 @@ const BookingView = () => {
               <Grid container spacing={2} sx={{ alignItems: "flex-end" }}>
                 <Grid xs={12} sm={6} md={2.4}>
                   <TextField
+                    id="hotel-location"
+                    name="location"
                     fullWidth
                     label="Destination / City"
                     placeholder="e.g. Goa"
@@ -377,6 +399,8 @@ const BookingView = () => {
                 </Grid>
                 <Grid xs={6} md={2.4}>
                   <TextField
+                    id="check-in-date"
+                    name="checkIn"
                     fullWidth
                     type="date"
                     label="Check-in"
@@ -399,6 +423,8 @@ const BookingView = () => {
                 </Grid>
                 <Grid xs={6} md={2.4}>
                   <TextField
+                    id="check-out-date"
+                    name="checkOut"
                     fullWidth
                     type="date"
                     label="Check-out"
@@ -421,6 +447,8 @@ const BookingView = () => {
                 </Grid>
                 <Grid xs={6} md={2.4}>
                   <TextField
+                    id="hotel-guests"
+                    name="guests"
                     fullWidth
                     select
                     label="Guests"
@@ -506,6 +534,8 @@ const BookingView = () => {
                       </Typography>
                       <Box sx={{ display: "flex", gap: 1 }}>
                         <TextField
+                          id="hotel-min-budget"
+                          name="minBudget"
                           fullWidth
                           size="small"
                           label="Min ($)"
@@ -520,6 +550,8 @@ const BookingView = () => {
                           }
                         />
                         <TextField
+                          id="hotel-max-budget"
+                          name="maxBudget"
                           fullWidth
                           size="small"
                           label="Max ($)"
@@ -614,106 +646,115 @@ const BookingView = () => {
             {flights.length} Flight{flights.length !== 1 ? "s" : ""} Found
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            {flights.map((flight) => (
-              <Paper
-                key={flight.id}
-                elevation={0}
-                sx={{
-                  p: 3,
-                  borderRadius: 3,
-                  border: "1px solid",
-                  borderColor: "divider",
-                  "&:hover": { boxShadow: 4 },
-                  transition: "box-shadow 0.2s",
-                }}
-              >
-                <Grid container sx={{ alignItems: "center" }} spacing={2}>
-                  <Grid xs={12} sm={2}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                      <FlightIcon color="primary" />
-                      <Box>
-                        <Typography variant="subtitle2" fontWeight={700}>
-                          {flight.airline}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          Economy
-                        </Typography>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid xs={12} sm={5}>
-                    <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                      <Box sx={{ textAlign: "center" }}>
-                        <Typography variant="h6" fontWeight={700}>
-                          {flight.departureTime}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {flight.origin}
-                        </Typography>
-                      </Box>
-                      <Box sx={{ flex: 1, textAlign: "center" }}>
-                        <Typography variant="caption" color="text.secondary">
-                          {flight.duration}
-                        </Typography>
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 0.5,
-                          }}
-                        >
-                          <Divider sx={{ flex: 1 }} />
-                          <FlightIcon
-                            sx={{
-                              fontSize: 14,
-                              color: "text.disabled",
-                              transform: "rotate(90deg)",
-                            }}
-                          />
-                          <Divider sx={{ flex: 1 }} />
+            <ShowMoreList
+              items={flights}
+              initialCount={2}
+              itemLabel="Flights"
+              renderItem={(flight) => (
+                <Paper
+                  key={flight.id}
+                  elevation={0}
+                  sx={{
+                    p: 3,
+                    borderRadius: 3,
+                    border: "1px solid",
+                    borderColor: "divider",
+                    "&:hover": { boxShadow: 4 },
+                    transition: "box-shadow 0.2s",
+                  }}
+                >
+                  <Grid container sx={{ alignItems: "center" }} spacing={2}>
+                    <Grid xs={12} sm={2}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 1 }}
+                      >
+                        <FlightIcon color="primary" />
+                        <Box>
+                          <Typography variant="subtitle2" fontWeight={700}>
+                            {flight.airline}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            Economy
+                          </Typography>
                         </Box>
-                        <Chip
-                          label="Non-stop"
-                          size="small"
-                          color="success"
-                          sx={{ fontSize: "10px", height: 18 }}
-                        />
                       </Box>
-                      <Box sx={{ textAlign: "center" }}>
-                        <Typography variant="h6" fontWeight={700}>
-                          {flight.arrivalTime}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          {flight.destination}
-                        </Typography>
+                    </Grid>
+                    <Grid xs={12} sm={5}>
+                      <Box
+                        sx={{ display: "flex", alignItems: "center", gap: 2 }}
+                      >
+                        <Box sx={{ textAlign: "center" }}>
+                          <Typography variant="h6" fontWeight={700}>
+                            {flight.departureTime}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {flight.origin}
+                          </Typography>
+                        </Box>
+                        <Box sx={{ flex: 1, textAlign: "center" }}>
+                          <Typography variant="caption" color="text.secondary">
+                            {flight.duration}
+                          </Typography>
+                          <Box
+                            sx={{
+                              display: "flex",
+                              alignItems: "center",
+                              gap: 0.5,
+                            }}
+                          >
+                            <Divider sx={{ flex: 1 }} />
+                            <FlightIcon
+                              sx={{
+                                fontSize: 14,
+                                color: "text.disabled",
+                                transform: "rotate(90deg)",
+                              }}
+                            />
+                            <Divider sx={{ flex: 1 }} />
+                          </Box>
+                          <Chip
+                            label="Non-stop"
+                            size="small"
+                            color="success"
+                            sx={{ fontSize: "10px", height: 18 }}
+                          />
+                        </Box>
+                        <Box sx={{ textAlign: "center" }}>
+                          <Typography variant="h6" fontWeight={700}>
+                            {flight.arrivalTime}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            {flight.destination}
+                          </Typography>
+                        </Box>
                       </Box>
-                    </Box>
+                    </Grid>
+                    <Grid item xs={12} sm={3} sx={{ textAlign: "center" }}>
+                      <Typography
+                        variant="h5"
+                        fontWeight={800}
+                        color="primary.main"
+                      >
+                        ${flight.price}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        per person
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={2}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        sx={{ borderRadius: 3 }}
+                      >
+                        Select
+                      </Button>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={12} sm={3} sx={{ textAlign: "center" }}>
-                    <Typography
-                      variant="h5"
-                      fontWeight={800}
-                      color="primary.main"
-                    >
-                      ${flight.price}
-                    </Typography>
-                    <Typography variant="caption" color="text.secondary">
-                      per person
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={2}>
-                    <Button
-                      fullWidth
-                      variant="outlined"
-                      color="primary"
-                      sx={{ borderRadius: 3 }}
-                    >
-                      Select
-                    </Button>
-                  </Grid>
-                </Grid>
-              </Paper>
-            ))}
+                </Paper>
+              )}
+            />
           </Box>
         </Box>
       )}
@@ -746,108 +787,123 @@ const BookingView = () => {
           <Typography variant="h6" fontWeight={700} mb={2}>
             {hotels.length} Hotel{hotels.length !== 1 ? "s" : ""} Found
           </Typography>
-          <Grid container spacing={3}>
-            {hotels.map((hotel) => (
-              <Grid xs={12} md={6} lg={4} key={hotel.id}>
-                <Card
-                  elevation={0}
-                  sx={{
-                    borderRadius: 3,
-                    border: "1px solid",
-                    borderColor: "divider",
-                    height: "100%",
-                    "&:hover": { boxShadow: 4 },
-                    transition: "box-shadow 0.2s",
-                  }}
-                >
-                  <Box
+          <Grid container spacing={{ xs: 2, md: 3 }}>
+            <ShowMoreList
+              items={hotels}
+              initialCount={hotelsInitialCount}
+              itemLabel="Hotels"
+              renderItem={(hotel) => (
+                <Grid xs={12} md={6} lg={4} key={hotel.id}>
+                  <Card
+                    elevation={0}
                     sx={{
-                      height: 160,
-                      bgcolor: "primary.light",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
+                      borderRadius: 3,
+                      border: "1px solid",
+                      borderColor: "divider",
+                      height: "100%",
+                      "&:hover": { boxShadow: 4 },
+                      transition: "box-shadow 0.2s",
                     }}
                   >
-                    <HotelIcon
-                      sx={{ fontSize: 64, color: "primary.main", opacity: 0.4 }}
-                    />
-                  </Box>
-                  <CardContent>
-                    <Typography variant="h6" fontWeight={700}>
-                      {hotel.name}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" mb={1}>
-                      {hotel.address}
-                    </Typography>
                     <Box
                       sx={{
+                        height: 160,
+                        bgcolor: "primary.light",
                         display: "flex",
                         alignItems: "center",
-                        gap: 1,
-                        mb: 1.5,
+                        justifyContent: "center",
                       }}
                     >
-                      <Rating
-                        value={hotel.rating}
-                        precision={0.5}
-                        size="small"
-                        readOnly
+                      <HotelIcon
+                        sx={{
+                          fontSize: 64,
+                          color: "primary.main",
+                          opacity: 0.4,
+                        }}
                       />
-                      <Typography variant="caption">
-                        ({hotel.rating})
+                    </Box>
+                    <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
+                      <Typography
+                        variant="h6"
+                        fontWeight={700}
+                        sx={{ wordBreak: "break-word" }}
+                      >
+                        {hotel.name}
                       </Typography>
-                    </Box>
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: 0.5,
-                        mb: 2,
-                      }}
-                    >
-                      {hotel.amenities?.map((a) => (
-                        <Chip
-                          key={a}
-                          label={a}
+                      <Typography variant="body2" color="text.secondary" mb={1}>
+                        {hotel.address}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 1,
+                          mb: 1.5,
+                        }}
+                      >
+                        <Rating
+                          value={hotel.rating}
+                          precision={0.5}
                           size="small"
-                          icon={amenityIcons[a] || null}
-                          sx={{ fontSize: "11px", height: 22 }}
+                          readOnly
                         />
-                      ))}
-                    </Box>
-                    <Divider sx={{ mb: 2 }} />
-                    <Box
-                      sx={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Box>
-                        <Typography
-                          variant="h6"
-                          fontWeight={800}
-                          color="primary.main"
-                        >
-                          ${hotel.price}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
-                          per night
+                        <Typography variant="caption">
+                          ({hotel.rating})
                         </Typography>
                       </Box>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        sx={{ borderRadius: 3 }}
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: 0.5,
+                          mb: 2,
+                        }}
                       >
-                        Book Now
-                      </Button>
-                    </Box>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
+                        {hotel.amenities?.map((a) => (
+                          <Chip
+                            key={a}
+                            label={a}
+                            size="small"
+                            icon={amenityIcons[a] || null}
+                            sx={{ fontSize: "11px", height: 22 }}
+                          />
+                        ))}
+                      </Box>
+                      <Divider sx={{ mb: 2 }} />
+                      <Box
+                        sx={{
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          flexWrap: "wrap",
+                          gap: 1,
+                        }}
+                      >
+                        <Box>
+                          <Typography
+                            variant="h6"
+                            fontWeight={800}
+                            color="primary.main"
+                          >
+                            ${hotel.price}
+                          </Typography>
+                          <Typography variant="caption" color="text.secondary">
+                            per night
+                          </Typography>
+                        </Box>
+                        <Button
+                          variant="contained"
+                          size="small"
+                          sx={{ borderRadius: 3 }}
+                        >
+                          Book Now
+                        </Button>
+                      </Box>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              )}
+            />
           </Grid>
         </Box>
       )}

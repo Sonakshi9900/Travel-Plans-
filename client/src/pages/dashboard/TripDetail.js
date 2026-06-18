@@ -1,7 +1,11 @@
+import Switch from "@mui/material/Switch";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import QRCode from "react-qr-code";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { toast } from "react-toastify";
+import api from "../../services/api";
 import {
   Box,
   Typography,
@@ -94,6 +98,13 @@ const TripDetail = () => {
   });
 
   const [editForm, setEditForm] = useState({});
+  const [shareEnabled, setShareEnabled] = useState(false);
+
+  useEffect(() => {
+    if (currentTrip) {
+      setShareEnabled(currentTrip.shareEnabled);
+    }
+  }, [currentTrip]);
 
   useEffect(() => {
     dispatch(getTrip(id));
@@ -167,6 +178,12 @@ const TripDetail = () => {
 
   const handleEditTrip = (e) => {
     e.preventDefault();
+
+    if (new Date(editForm.endDate) < new Date(editForm.startDate)) {
+      toast.error("End date cannot be earlier than start date");
+      return;
+    }
+
     dispatch(updateTrip(id, editForm));
     setEditOpen(false);
   };
@@ -175,12 +192,21 @@ const TripDetail = () => {
     setShareLoading(true);
     const token = await dispatch(shareTrip(id));
     if (token) {
-      setShareLink(`${window.location.origin}/trip/share/${token}`);
+      setShareLink(`${window.location.origin}/shared-trip/${token}`);
       setShareOpen(true);
     }
     setShareLoading(false);
   };
 
+  const toggleSharing = async () => {
+    try {
+      const res = await api.put(`/trips/${id}/share-toggle`);
+
+      setShareEnabled(res.data.shareEnabled);
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const tripImage =
     currentTrip?.images?.[0] ||
     "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?fit=crop&w=1200";
@@ -235,7 +261,24 @@ const TripDetail = () => {
           </Tooltip>
           <Tooltip title="Edit Trip">
             <IconButton
-              onClick={() => setEditOpen(true)}
+              onClick={() => {
+                setEditForm({
+                  destination: currentTrip.destination || "",
+                  startDate: currentTrip.startDate
+                    ? new Date(currentTrip.startDate)
+                        .toISOString()
+                        .split("T")[0]
+                    : "",
+                  endDate: currentTrip.endDate
+                    ? new Date(currentTrip.endDate).toISOString().split("T")[0]
+                    : "",
+                  description: currentTrip.description || "",
+                  budget: currentTrip.budget || 0,
+                  status: currentTrip.status || "planned",
+                });
+
+                setEditOpen(true);
+              }}
               color="primary"
               sx={{ bgcolor: "primary.light" }}
             >
@@ -839,7 +882,12 @@ const TripDetail = () => {
                   fullWidth
                   type="date"
                   label="End Date"
-                  slotProps={{ inputLabel: { shrink: true } }}
+                  slotProps={{
+                    inputLabel: { shrink: true },
+                    htmlInput: {
+                      min: editForm.startDate,
+                    },
+                  }}
                   value={editForm.endDate || ""}
                   onChange={(e) =>
                     setEditForm({ ...editForm, endDate: e.target.value })
@@ -902,17 +950,52 @@ const TripDetail = () => {
         maxWidth="sm"
         fullWidth
       >
+        {shareLink && (
+          <Box
+            sx={{
+              mt: 3,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <Paper
+              sx={{
+                p: 2,
+                borderRadius: 3,
+              }}
+            >
+              <QRCode value={shareLink} size={180} />
+            </Paper>
+          </Box>
+        )}
         <DialogTitle>Share Trip 🔗</DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ mb: 2 }}>
             Anyone with this link can view your trip to{" "}
             <strong>{currentTrip.destination}</strong> (read-only).
           </DialogContentText>
+
           <TextField
             fullWidth
             value={shareLink}
             slotProps={{ input: { readOnly: true } }}
             onClick={(e) => e.target.select()}
+          />
+
+          <FormControlLabel
+            sx={{ mt: 2 }}
+            control={
+              <Switch
+                checked={shareEnabled}
+                onChange={toggleSharing}
+                color="success"
+              />
+            }
+            label={
+              shareEnabled
+                ? "Public Sharing Enabled"
+                : "Public Sharing Disabled"
+            }
           />
         </DialogContent>
         <DialogActions sx={{ p: 2 }}>
